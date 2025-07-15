@@ -83,32 +83,7 @@ export default defineConfig({
     ],
   },
   server: {
-    port: 3000,
-    proxy: {
-      '/api/bible': {
-        target: 'https://www.abibliadigital.com.br/api',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/bible/, ''),
-        secure: true,
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36'
-        }
-      },
-      '/api/bible-alt': {
-        target: 'https://bible-api.com',
-        changeOrigin: true,
-        rewrite: (path) => {
-          // Remove /api/bible-alt e mantém o resto
-          const newPath = path.replace(/^\/api\/bible-alt\//, '/')
-          console.log('Proxy rewrite:', path, '->', newPath)
-          return newPath
-        },
-        secure: true,
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36'
-        }
-      }
-    }
+    port: 3000
   },
   css: {
     preprocessorOptions: {

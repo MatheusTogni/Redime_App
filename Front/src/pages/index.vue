@@ -97,17 +97,12 @@ const goToBible = () => {
   router.push('/biblia')
 }
 
-onMounted(async () => {
+onMounted(() => {
   // Carrega um versículo aleatório
-  try {
-    const randomVerse = getRandomInspirationalVerse()
-    verseOfDay.value = {
-      text: randomVerse.text,
-      reference: randomVerse.reference
-    }
-  } catch (error) {
-    console.error('Erro ao carregar versículo do dia:', error)
-    // Mantém o versículo padrão
+  const randomVerse = getRandomInspirationalVerse()
+  verseOfDay.value = {
+    text: randomVerse.text,
+    reference: randomVerse.reference
   }
 })
 </script>

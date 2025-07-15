@@ -1,4 +1,8 @@
-import { bibleApiService, type BibleVerse } from '../services/bible-api'
+// Interface para versículos
+export interface BibleVerse {
+  number: number
+  text: string
+}
 
 export const sampleVerses = {
   // Gênesis 1
@@ -115,63 +119,24 @@ export const inspirationalVerses = [
   }
 ]
 
-// Função para obter um versículo aleatório
-export const getRandomVerse = async (): Promise<{ text: string; reference: string }> => {
-  try {
-    // Tenta buscar versículo aleatório da API
-    const verse = await bibleApiService.getRandomVerse('nvi')
-    
-    // Verifica se a resposta tem as informações necessárias
-    if (verse.book?.name && verse.chapter?.number) {
-      return {
-        text: verse.text,
-        reference: `${verse.book.name} ${verse.chapter.number}:${verse.number}`
-      }
-    } else {
-      throw new Error('Resposta da API incompleta')
-    }
-  } catch (error) {
-    // Fallback para versículos locais
-    const randomIndex = Math.floor(Math.random() * inspirationalVerses.length)
-    return inspirationalVerses[randomIndex]
-  }
+// Função para obter um versículo aleatório (apenas local)
+export const getRandomVerse = (): { text: string; reference: string } => {
+  const randomIndex = Math.floor(Math.random() * inspirationalVerses.length)
+  return inspirationalVerses[randomIndex]
 }
 
-// Função para carregar versículos de um capítulo
-export const loadBibleChapter = async (book: string, chapter: number, version: string = 'nvi'): Promise<BibleVerse[]> => {
-  try {
-    // Tenta carregar da API externa
-    const chapterData = await bibleApiService.getChapter(version, book, chapter)
-    return chapterData.verses
-  } catch (error) {
-    console.log('API externa não disponível, usando dados locais:', error)
-    
-    // Fallback para dados locais
-    const bookData = sampleVerses[book as keyof typeof sampleVerses] as any
-    if (bookData && bookData[chapter]) {
-      return bookData[chapter].verses
-    }
-    
-    // Retorna versículos de exemplo se não encontrar o livro/capítulo
-    return [
-      { 
-        number: 1, 
-        text: "Este é um versículo de exemplo. Para acessar o conteúdo completo da Bíblia, verifique sua conexão com a internet." 
-      }
-    ]
+// Função para carregar versículos de um capítulo (apenas dados locais)
+export const loadBibleChapter = (book: string, chapter: number): BibleVerse[] => {
+  const bookData = sampleVerses[book as keyof typeof sampleVerses] as any
+  if (bookData && bookData[chapter]) {
+    return bookData[chapter].verses
   }
-}
-
-export const fallbackVerses = {
-  loadVerses: (book: string, chapter: number) => {
-    const bookData = sampleVerses[book as keyof typeof sampleVerses] as any
-    if (bookData && bookData[chapter]) {
-      return bookData[chapter].verses
+  
+  // Retorna versículos de exemplo se não encontrar o livro/capítulo
+  return [
+    { 
+      number: 1, 
+      text: "Este é um versículo de exemplo. Para acessar o conteúdo completo da Bíblia, adicione mais dados locais." 
     }
-    
-    // Retorna versículos de exemplo se não encontrar o livro/capítulo
-    return [
-      { number: 1, text: "Este é um versículo de exemplo. Para acessar o conteúdo completo da Bíblia, verifique sua conexão com a internet." }
-    ]
-  }
+  ]
 }

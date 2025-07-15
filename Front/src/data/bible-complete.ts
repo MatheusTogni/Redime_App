@@ -80,76 +80,6 @@ export const BIBLE_BOOKS: BibleBookData[] = [
   { abbrev: 'ap', name: 'Apocalipse', testament: 'new', chapters: 22, author: 'João', group: 'Profecia' }
 ]
 
-// Mapeamento para a API alternativa (Bible API)
-export const BOOK_MAPPING_EN: { [key: string]: string } = {
-  'gn': 'genesis',
-  'ex': 'exodus', 
-  'lv': 'leviticus',
-  'nm': 'numbers',
-  'dt': 'deuteronomy',
-  'js': 'joshua',
-  'jz': 'judges',
-  'rt': 'ruth',
-  '1sm': '1samuel',
-  '2sm': '2samuel',
-  '1rs': '1kings',
-  '2rs': '2kings',
-  '1cr': '1chronicles',
-  '2cr': '2chronicles',
-  'ed': 'ezra',
-  'ne': 'nehemiah',
-  'et': 'esther',
-  'job': 'job',
-  'sl': 'psalms',
-  'pv': 'proverbs',
-  'ec': 'ecclesiastes',
-  'ct': 'song_of_songs',
-  'is': 'isaiah',
-  'jr': 'jeremiah',
-  'lm': 'lamentations',
-  'ez': 'ezekiel',
-  'dn': 'daniel',
-  'os': 'hosea',
-  'jl': 'joel',
-  'am': 'amos',
-  'ob': 'obadiah',
-  'jn': 'jonah',
-  'mq': 'micah',
-  'na': 'nahum',
-  'hc': 'habakkuk',
-  'sf': 'zephaniah',
-  'ag': 'haggai',
-  'zc': 'zechariah',
-  'ml': 'malachi',
-  'mt': 'matthew',
-  'mc': 'mark',
-  'lc': 'luke',
-  'jo': 'john',
-  'at': 'acts',
-  'rm': 'romans',
-  '1co': '1corinthians',
-  '2co': '2corinthians',
-  'gl': 'galatians',
-  'ef': 'ephesians',
-  'fp': 'philippians',
-  'cl': 'colossians',
-  '1ts': '1thessalonians',
-  '2ts': '2thessalonians',
-  '1tm': '1timothy',
-  '2tm': '2timothy',
-  'tt': 'titus',
-  'fm': 'philemon',
-  'hb': 'hebrews',
-  'tg': 'james',
-  '1pe': '1peter',
-  '2pe': '2peter',
-  '1jo': '1john',
-  '2jo': '2john',
-  '3jo': '3john',
-  'jd': 'jude',
-  'ap': 'revelation'
-}
-
 // Versículos inspiracionais em português (NVI)
 export const INSPIRATIONAL_VERSES = [
   {
@@ -238,9 +168,4 @@ export function getBooksByTestament(testament: 'old' | 'new') {
 // Função para encontrar um livro por abreviação
 export function findBookByAbbrev(abbrev: string) {
   return BIBLE_BOOKS.find(book => book.abbrev === abbrev)
-}
-
-// Função para obter nome em inglês para API externa
-export function getEnglishBookName(abbrev: string) {
-  return BOOK_MAPPING_EN[abbrev] || abbrev
 }
