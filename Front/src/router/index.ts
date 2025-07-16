@@ -16,7 +16,6 @@ const routes: RouteRecordRaw[] = [
     name: 'About',
     component: () => import('../pages/about.vue')
   }
-  // Adicione mais rotas conforme necessário
 ]
 
 const router = createRouter({

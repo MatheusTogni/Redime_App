@@ -1,120 +1,75 @@
 <template>
   <v-container>
-    <v-row justify="center">
-      <v-col cols="12" md="8">
+    <v-row justify="center" class="mt-8">
+      <v-col cols="12" md="8" lg="6">
         <v-card class="text-center pa-6">
-          <v-card-title class="text-h4 mb-4">
-            <v-icon size="48" color="primary" class="mr-2">mdi-cross</v-icon>
-            Bem-vindo ao Redime App
-          </v-card-title>
+          <v-icon size="80" color="primary" class="mb-4">mdi-cross</v-icon>
           
-          <v-card-subtitle class="text-h6 mb-4">
-            Sua jornada de fé digital
-          </v-card-subtitle>
+          <h1 class="text-h3 mb-4">Bem-vindo ao Redime App</h1>
           
-          <v-card-text>
-            <p class="text-body-1 mb-4">
-              "Porque onde estiverem dois ou três reunidos em meu nome, aí estou eu no meio deles."
-            </p>
-            <p class="text-caption mb-6">Mateus 18:20</p>
+          <p class="text-h6 text-grey mb-6">
+            Sua bíblia digital offline para estudo e meditação
+          </p>
+          
+          <v-row class="mt-8" justify="center">
+            <v-col cols="12" sm="6" md="4">
+              <v-btn
+                size="large"
+                color="primary"
+                block
+                to="/biblia"
+                prepend-icon="mdi-book-open-page-variant"
+              >
+                Ler Bíblia
+              </v-btn>
+            </v-col>
+          </v-row>
+          
+          <v-divider class="my-6"></v-divider>
+          
+          <v-row>
+            <v-col cols="12" sm="4">
+              <v-card flat>
+                <v-icon size="48" color="primary">mdi-book-search</v-icon>
+                <v-card-title class="text-h6">Pesquisa Rápida</v-card-title>
+                <v-card-text>
+                  Encontre versículos por livro e capítulo
+                </v-card-text>
+              </v-card>
+            </v-col>
             
-            <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-card class="feature-card" elevation="2" @click="goToBible">
-                  <v-card-text class="text-center">
-                    <v-icon size="48" color="primary">mdi-book-open-page-variant</v-icon>
-                    <p class="text-h6 mt-2">Bíblia</p>
-                    <p class="text-body-2">Leia e estude a Palavra de Deus</p>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-              
-              <v-col cols="12" sm="6" md="4">
-                <v-card class="feature-card" elevation="2">
-                  <v-card-text class="text-center">
-                    <v-icon size="48" color="primary">mdi-hands-pray</v-icon>
-                    <p class="text-h6 mt-2">Oração</p>
-                    <p class="text-body-2">Momentos de oração e reflexão</p>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-              
-              <v-col cols="12" sm="6" md="4">
-                <v-card class="feature-card" elevation="2">
-                  <v-card-text class="text-center">
-                    <v-icon size="48" color="primary">mdi-account-group</v-icon>
-                    <p class="text-h6 mt-2">Comunidade</p>
-                    <p class="text-body-2">Conecte-se com outros irmãos</p>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          
-          <v-card-actions class="justify-center">
-            <v-btn color="primary" size="large" @click="goToBible">
-              <v-icon left>mdi-book-open-page-variant</v-icon>
-              Começar Leitura
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-    
-    <!-- Versículo do dia -->
-    <v-row justify="center" class="mt-6">
-      <v-col cols="12" md="8">
-        <v-card>
-          <v-card-title class="text-center">
-            <v-icon left>mdi-calendar-today</v-icon>
-            Versículo do Dia
-          </v-card-title>
-          <v-card-text class="text-center">
-            <p class="text-h6 font-italic mb-2">
-              "{{ verseOfDay.text }}"
-            </p>
-            <p class="text-caption">{{ verseOfDay.reference }}</p>
-          </v-card-text>
+            <v-col cols="12" sm="4">
+              <v-card flat>
+                <v-icon size="48" color="primary">mdi-wifi-off</v-icon>
+                <v-card-title class="text-h6">Totalmente Offline</v-card-title>
+                <v-card-text>
+                  Acesse sua bíblia em qualquer lugar
+                </v-card-text>
+              </v-card>
+            </v-col>
+            
+            <v-col cols="12" sm="4">
+              <v-card flat>
+                <v-icon size="48" color="primary">mdi-heart</v-icon>
+                <v-card-title class="text-h6">Interface Simples</v-card-title>
+                <v-card-text>
+                  Design focado na leitura e meditação
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { getRandomInspirationalVerse } from '../data/bible-complete'
-
-const router = useRouter()
-
-const verseOfDay = ref({
-  text: "Entregue o seu caminho ao Senhor; confie nele, e ele agirá.",
-  reference: "Salmos 37:5"
-})
-
-const goToBible = () => {
-  router.push('/biblia')
-}
-
-onMounted(() => {
-  // Carrega um versículo aleatório
-  const randomVerse = getRandomInspirationalVerse()
-  verseOfDay.value = {
-    text: randomVerse.text,
-    reference: randomVerse.reference
-  }
-})
+<script lang="ts" setup>
+// Página inicial do Redime App
 </script>
 
 <style scoped>
-.feature-card {
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.feature-card:hover {
-  transform: translateY(-2px);
+.v-card {
+  border-radius: 16px;
 }
 </style>
-
