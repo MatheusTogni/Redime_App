@@ -77,28 +77,22 @@
     <v-row style="margin:0;">
       <v-col cols="12" style="padding:0;">
         <div class="verses-bg pa-4">
+          <div class="verses-fade-overlay" :class="fadeState" v-if="fadeState"></div>
           <div v-if="selectedBook && selectedChapter && !dialogSelect" class="verses-bottom-divider"></div>
           <template v-if="verses.length > 0">
+            
+            <div class="verses-container">
             <div class="verso-titulo mb-4" style="flex-direction:column; gap:0;">
               <span class="font-weight-bold" style="font-size:1.5rem; line-height:1.1; color: grey;">{{ selectedBook }}</span>
               <span style="font-size:4.0rem; font-weight:900; line-height:1.1;">{{ selectedChapter }}</span>
             </div>
-            <div class="verses-container">
-              <div
-                v-for="verse in verses"
-                :key="verse.number"
-                class="verse-item mb-3"
-              >
-                <v-chip
-                  class="mr-2 mb-1"
-                  size="small"
-                  color="primary"
-                  variant="flat"
-                  style="font-size:1.1rem; font-weight:600;"
-                >
-                  {{ verse.number }}
-                </v-chip>
-                <span class="verse-text">{{ verse.text }}</span>
+              <div class="verse-text-corrido">
+                <span v-for="(verse, idx) in verses" :key="verse.number">
+                  <span class="verse-number">{{ verse.number }}.</span> {{ verse.text }}
+                  <span v-if="idx < verses.length - 1">
+                    <br><br>
+                  </span>
+                </span>
               </div>
             </div>
           </template>
@@ -167,7 +161,8 @@ export default defineComponent({
       newTestamentBooks: [
         'Mateus', 'Marcos', 'Lucas', 'João', 'Atos', 'Romanos', '1Coríntios', '2Coríntios', 'Gálatas', 'Efésios', 'Filipenses', 'Colossenses', '1Tessalonicenses', '2Tessalonicenses', '1Timóteo', '2Timóteo', 'Tito', 'Filemom', 'Hebreus', 'Tiago', '1Pedro', '2Pedro', '1João', '2João', '3João', 'Judas', 'Apocalipse'
       ],
-      expandedBook: null as string | null
+      expandedBook: null as string | null,
+      fadeState: null as 'in' | 'out' | null // controla o estado do fade
     };
   },
   computed: {
@@ -234,15 +229,39 @@ export default defineComponent({
       this.dialogSelect = false;
       this.expandedBook = null; // Sempre fecha o hover ao escolher capítulo
     },
+    triggerVersesFadeTransition(callback?: () => void) {
+      this.fadeState = 'in';
+      setTimeout(() => {
+        if (callback) callback();
+        this.fadeState = 'out';
+        setTimeout(() => {
+          this.fadeState = null;
+        }, 200); // tempo do fade out reduzido
+      }, 200); // tempo do fade in reduzido
+    },
     goToPrevChapter() {
       if (this.hasPrevChapter) {
-        this.selectChapter((this.selectedChapter as number) - 1);
+        this.triggerVersesFadeTransition(() => {
+          this.selectChapter((this.selectedChapter as number) - 1);
+          this.scrollVersesToTop();
+        });
       }
     },
     goToNextChapter() {
       if (this.hasNextChapter) {
-        this.selectChapter((this.selectedChapter as number) + 1);
+        this.triggerVersesFadeTransition(() => {
+          this.selectChapter((this.selectedChapter as number) + 1);
+          this.scrollVersesToTop();
+        });
       }
+    },
+    scrollVersesToTop() {
+      this.$nextTick(() => {
+        const versesContainer = document.querySelector('.verses-container');
+        if (versesContainer) {
+          versesContainer.scrollTop = 0;
+        }
+      });
     },
     loadVerses() {
       if (!this.selectedBook || !this.selectedChapter || !this.bibliaData[this.selectedBook]) {
@@ -287,7 +306,7 @@ export default defineComponent({
   z-index: 101;
 }
 .verses-container {
-  max-height: calc(84vh - 120px);
+  max-height: calc(95vh - 120px);
   overflow-y: auto;
 }
 
@@ -305,6 +324,19 @@ export default defineComponent({
   font-size: 1.1rem;
   line-height: 1.8;
   color: #fff;
+}
+
+.verse-text-corrido {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #fff;
+  word-break: break-word;
+}
+.verse-number {
+  font-size: 0.95rem;
+  color: #b0b0b0;
+  font-weight: 600;
+  margin-right: 4px;
 }
 
 .fade-slide-enter-active, .fade-slide-leave-active {
@@ -348,6 +380,12 @@ export default defineComponent({
   justify-content: center;
   text-align: center;
   width: 100%;
+  /* Removendo qualquer position fixa ou sticky */
+  position: static !important;
+}
+
+.static-top {
+  position: static !important;
 }
 
 @media (max-width: 600px) {
@@ -358,5 +396,24 @@ export default defineComponent({
     font-size: 0.95rem;
     min-height: 48px;
   }
+}
+
+.verses-fade-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #232323;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s cubic-bezier(.4,0,.2,1); /* reduzido para 200ms */
+}
+.verses-fade-overlay.in {
+  opacity: 1;
+}
+.verses-fade-overlay.out {
+  opacity: 0;
 }
 </style>
